@@ -16,17 +16,11 @@ pipeline {
             }
             steps {
                 echo 'Retrieve source from github. run npm install and npm test' 
-                git branch: 'main',
-                url: ' https://github.com/vithakur72/devops_ui.git'
-                echo 'Did we get the source?'
+                git branch: 'master',
+                    url: 'https://github.com/vithakur72/devops_ui.git'
+                echo 'repo files'
                 sh 'ls -a'
-                echo 'install dependencies'
-                sh 'npm install'
-                echo 'Run tests'
-                // -- --watchAll=false flag ensures react tests exit
-                sh 'npm test -- --watchAll=false'
-                echo 'Tests passed on to build and deploy Docker container'
-                }
+            }
         }
         stage('Building image') {
             steps{
@@ -50,13 +44,19 @@ pipeline {
                     reuseNode true
                         }
                     }
-            //steps {
-             //}
+            steps {
+                script {
+                    echo 'push the image to docker hub' 
+                }
+             }
         }     
         stage('Remove local docker image') {
             steps{
-                sh "docker rmi $imageName:latest"
-                sh "docker rmi $imageName:$BUILD_NUMBER"
+                script {
+                    echo 'push the image to docker hub' 
+                }
+                // sh "docker rmi $imageName:latest"
+                // sh "docker rmi $imageName:$BUILD_NUMBER"
             }
         }
     }
